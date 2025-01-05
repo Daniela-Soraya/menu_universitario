@@ -1,0 +1,79 @@
+{% extends "./plantilla.html" %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h1 class="mb-4">Formulario de Calificación</h1>
+    <form method="post" id="formCalificacion" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <!-- Botón de Volver a la Lista -->
+        <a href="{% url 'listar_calificaciones' %}" class="btn btn-danger ms-2 ">
+            <i class="bi bi-arrow-left-circle"></i> Cancelar
+        </a>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Inicializar jQuery Validate
+        $("#formCalificacion").validate({
+            rules: {
+                estudiante: {
+                    required: true,
+                    regex: /^[a-zA-Z\s]+$/ // Solo letras y espacios para el nombre del estudiante
+                },
+                platillo: {
+                    required: true,
+                    regex: /^[a-zA-Z\s]+$/ // Solo letras y espacios para el nombre del platillo
+                },
+                puntuacion: {
+                    required: true,
+                    number: true,         // Solo números para la puntuación
+                    min: 1,               // Puntuación mínima de 1
+                    max: 10               // Puntuación máxima de 10
+                }
+            },
+            messages: {
+                estudiante: {
+                    required: "Por favor, ingresa el nombre del estudiante.",
+                    regex: "El nombre del estudiante solo puede contener letras y espacios."
+                },
+                platillo: {
+                    required: "Por favor, ingresa el nombre del platillo.",
+                    regex: "El nombre del platillo solo puede contener letras y espacios."
+                },
+                puntuacion: {
+                    required: "Por favor, ingresa la puntuación.",
+                    number: "La puntuación debe ser un número.",
+                    min: "La puntuación debe ser al menos 1.",
+                    max: "La puntuación no puede ser mayor que 10."
+                }
+            },
+            errorClass: "text-danger", // Clase para los mensajes de error
+            errorElement: "div", // Mostrar errores en un div
+            highlight: function (element) {
+                $(element).addClass("is-invalid"); // Resaltar campo inválido
+            },
+            unhighlight: function (element) {
+                $(element).removeClass("is-invalid"); // Quitar resaltado de campo válido
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element); // Colocar el mensaje después del campo
+            },
+            submitHandler: function(form) {
+                // Aseguramos que solo se envíe el formulario si la validación es exitosa
+                form.submit();
+            }
+        });
+
+        // Agregar regla personalizada para validar solo letras
+        $.validator.addMethod("regex", function (value, element, regex) {
+            return this.optional(element) || regex.test(value);
+        }, "Formato inválido.");
+    });
+</script>
+{% endblock %}
+

@@ -1,0 +1,25 @@
+{% extends "./plantilla.html" %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h1 class="mb-4">Lista de Comentarios</h1>
+    <a href="{% url 'crear_comentario' %}" class="btn btn-primary mb-3">Nuevo Comentario</a>
+    <ul class="list-group">
+        {% for comentario in comentarios %}
+            <li class="list-group-item">
+                <p class="mb-1">
+                    <strong>{{ comentario.estudiante }}</strong> comentó en 
+                    <strong>{{ comentario.platillo }}</strong>:
+                </p>
+                <blockquote class="blockquote">
+                    "{{ comentario.texto }}"
+                </blockquote>
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'editar_comentario' comentario.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
+                    <a href="{% url 'eliminar_comentario' comentario.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

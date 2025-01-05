@@ -1,0 +1,1 @@
+web: menu_universitario.wsgi
